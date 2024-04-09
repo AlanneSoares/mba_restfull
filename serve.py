@@ -2,18 +2,21 @@
 from flask import Flask, request, jsonify
 #importa de classes e métodos do model
 from model.restaurant import db, Restaurant, Address
+from flask_cors import CORS, cross_origin
 
 #conexão com o banco de dados local
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123456@localhost/mba_arq_serv_restfull_python'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-HOST = "0.0.0.0"
+cors = CORS(app)
+HOST = "localhost"
 PORT = 4999
 
 db.init_app(app)
 
 #Endpoint de cadastro do restaurante
-@app.route('/restaurant', methods=['POST'])
+@app.route('/api/restaurant', methods=['POST'])
+@cross_origin
 def add_restaurant():
 
     #pega os dados do corpo da requisição
@@ -48,21 +51,24 @@ def add_restaurant():
     return jsonify({'message': 'Restaurante inserido com sucesso'}), 201
 
 #Endpoint de listagem de restaurantes
-@app.route('/restaurants', methods=['GET'])
+@app.route('/api/restaurants', methods=['GET'])
+@cross_origin
 def get_restaurants():
     #retorna todos os restaurantes
     restaurantes = Restaurant.query.all()
     return jsonify([restaurante.serialize() for restaurante in restaurantes])
 
 #Endpoint de listagem de restaurante passando o ID
-@app.route('/restaurant/<restaurant_id>', methods=['GET'])
+@app.route('/api/restaurant/<restaurant_id>', methods=['GET'])
+@cross_origin
 def get_restaurant(restaurant_id):
     #retorna o restaurante passando o ID, caso contrario dá 404
     restaurant = Restaurant.query.get_or_404(restaurant_id)
     return jsonify(restaurant.serialize())
 
 #Endpoint de listagem de restaurantes filtrando pelo endereço
-@app.route('/restaurants/address', methods=['GET'])
+@app.route('/api/restaurants/address', methods=['GET'])
+@cross_origin
 def get_restaurantx():
     
     #filtros
@@ -84,7 +90,8 @@ def get_restaurantx():
     return jsonify({'restaurants': serialized_restaurants}), 200
 
 #Endpoint de atualização de restaurantes
-@app.route('/restaurant/<int:restaurant_id>', methods=['PUT'])
+@app.route('/api/restaurant/<int:restaurant_id>', methods=['PUT'])
+@cross_origin
 def update_restaurant(restaurant_id):
     
     #verifica se o restaurante existe
@@ -122,7 +129,8 @@ def update_restaurant(restaurant_id):
     return jsonify({'message': 'Restaurante atualizado com sucesso'}), 200
 
 #Endpoint de remoção de restaurantes
-@app.route('/restaurant/<int:id>', methods=['DELETE'])
+@app.route('/api/restaurant/<int:id>', methods=['DELETE'])
+@cross_origin
 def delete_restaurant(id):
    
     #verifica se o restaurante existe

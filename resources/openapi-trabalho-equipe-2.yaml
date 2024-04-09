@@ -1,0 +1,228 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: Restaurant API
+  description: Restaurant API Agreement
+servers:
+  - url: http://localhost:4999/api
+     
+paths:
+  /restaurants:
+    get:
+      tags:
+        - Restaurant
+      summary: Get information about all restaurants
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string 
+                    
+  /restaurant:
+    post:
+      tags:
+        - Restaurant
+      summary: Register a new restaurant
+      requestBody:
+        description: Add a new Restaurant
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Restaurant'
+      responses:
+        '201': 
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'    
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string                    
+          
+  /restaurant/{id}:
+    get:
+      tags:
+        - Restaurant
+      summary: Get restaurant information by ID
+      parameters:
+        - in:  path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+          description: Restaurant ID to be obtained
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+    delete:
+      tags:
+        - Restaurant
+      summary: Restaurant exclusion by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 123
+          description: User ID to be deleted
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: string
+        '404':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+          
+    put:
+      tags:
+        - Restaurant
+      summary: Update restaurant 
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+            format: int64
+            example: 123
+          description: User ID to be updated
+      requestBody:
+        description: Parameters of the chosen Restaurant to be updated
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Restaurant'
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+             
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    
+  /restaurants/address:
+    get:
+      tags:
+        - Restaurant
+      summary: Search for restaurant addresses 
+      parameters:
+        - in: query
+          name: address 
+          required: true
+          schema:
+              $ref: '#/components/schemas/Address'
+          description: Search for restaurant addresses 
+      responses:
+        '200':
+          description: Success 
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Restaurant'
+        '400':
+          description: Not found
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string          
+  
+components:
+  schemas:
+    Address:
+      type: object
+      properties:
+        addressCountry:
+          type: string
+          description: Country of address
+        addressLocality:
+          type: string
+          description: Location of address
+        addressRegion:
+          type: string
+          description: Address region
+        streetAddress:
+          type: string
+          description: Street Address
+
+    Restaurant:
+      type: object
+      properties:
+        address:
+          $ref: '#/components/schemas/Address'
+        menu:
+          type: string
+          description: Restaurant menu 
+        name:
+          type: string
+          description: Restaurante name
+        priceRange:
+          type: string
+          description: Restaurant price range
+        telephone:
+          type: string
+          description: Restaurant phone
+        url:
+          type: string
+          format: uri
+          description: Restaurant URL
+          

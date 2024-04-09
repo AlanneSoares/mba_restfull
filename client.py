@@ -6,7 +6,7 @@ import requests
 
 #
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:123456@localhost/mba_arq_serv_restfull_python'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:extreme123@localhost/mba_arq_serv_restfull_python'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 HOST = "0.0.0.0"
 PORT = 5000
